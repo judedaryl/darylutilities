@@ -1,0 +1,143 @@
+<html>
+
+<head>
+    <title>daryl.io</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+</head>
+
+
+<body>
+
+    <div class="container mt-5">
+        <div class="text-center mb-5">
+            <h3>Daryl Utilities</h3>
+        </div>
+        <div>
+            <h4 class="text-center">Google search</h4>
+
+            <div class="d-flex flex-column mt-3">
+                <form id="search-form">
+                    <div class="mb-3 input-group">
+                        <input name="search" minlength="3" min="0" id="movie_name" type="text" class="form-control"
+                            id="_search_inp_" placeholder="Can't find the solution eh?">
+                        <button id="search_btn" type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                    <div class="text-center text-secondary my-3">
+                        <span>sites to search</span>
+                    </div>
+                    <div class="mb-3 d-flex flex-row gap-2 justify-content-center">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="stack" name="stack" id="stack">
+                            <label class="form-check-label" for="stack">
+                                Stack Overflow
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="msft" name="msft" id="msft">
+                            <label class="form-check-label" for="msft">
+                                Microsoft Docs
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="github" name="github" id="github">
+                            <label class="form-check-label" for="github">
+                                Github
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="text-center text-secondary my-3">
+                        <span>date range</span>
+                    </div>
+                    <div class="mb-3 d-flex gap-2 justify-content-center">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="time" id="inlineRadio1" value="any"
+                                checked>
+                            <label class="form-check-label" for="inlineRadio1">Any time</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="time" id="year" value="qdr:m12">
+                            <label class="form-check-label" for="year">Past year</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="time" id="inlineRadio2" value="qdr:m6">
+                            <label class="form-check-label" for="inlineRadio2">Past 6 months</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="time" id="inlineRadio3" value="qdr:m3">
+                            <label class="form-check-label" for="inlineRadio3">Past 3 months</label>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="my-5">
+            <hr />
+        </div>
+        <div>
+            <h3 class="text-center">Movie search</h3>
+
+            <div class="d-flex flex-column mt-3">
+                <form id="form-movie">
+                    <div class="mb-3 input-group">
+                        <input minlength="3" min="0" id="movie_name" type="text" class="form-control"
+                            id="exampleFormControlInput1" placeholder="Type a movie name here">
+                        <button id="movie_search_btn" type="submit" class="btn btn-primary">Search</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    const searchForm = document.getElementById('search-form')
+    const movieForm = document.getElementById('form-movie')
+    const searchInput = document.getElementById('_search_inp_')
+    const stack = document.getElementById('stack')
+    const msft = document.getElementById('msft')
+    const github = document.getElementById('github')
+
+    const sites = [
+        { elem: stack, site: 'stackoverflow.com' },
+        { elem: msft, site: 'docs.microsoft.com' },
+        { elem: github, site: 'github.com' }
+    ]
+
+    searchForm.onsubmit = (ev) => {
+        ev.preventDefault();
+        const val = ev.target[0].value;
+        const data = new FormData(ev.target);
+        const props = Object.fromEntries(data)
+        if (val.length < 3) {
+            alert('cannot be less than 3')
+            return;
+        }
+        let url = new URL(`https://google.com/search`)
+
+        let search = props.search
+        search = search.concat(' ', sites.filter(q => q.elem.checked).map(q => `site:${q.site}/`).join(' OR '))
+        url.searchParams.set('q', search)
+        const time = props.time;
+        if (props.time !== 'any') {
+            url.searchParams.set('tbs', props.time)
+        }
+        window.open(url.toString())
+    }
+
+    movieForm.onsubmit = (ev) => {
+        ev.preventDefault();
+        const val = ev.target[0].value ?? '';
+        if (val.length < 3) {
+            alert('cannot be less than 3')
+            return;
+        }
+        window.open(`https://yts.mx/browse-movies/${val}/all/all/0/latest/0/all`)
+    }
+
+</script>
+
+</html>
